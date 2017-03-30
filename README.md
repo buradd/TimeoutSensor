@@ -12,7 +12,7 @@ Make sure to add to your gradle:
     
     
     	dependencies {
-	        compile 'com.github.buradd:TimeoutSensor:1.0'
+	        compile 'com.github.buradd:TimeoutSensor:1.1'
 	}
 
 
