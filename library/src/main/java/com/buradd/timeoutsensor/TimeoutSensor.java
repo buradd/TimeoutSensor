@@ -23,7 +23,7 @@ public final class TimeoutSensor {
     private static Activity mCurrentActivity = null;
     public static long timeoutDuration = 1;
 
-    public static void start(long timeDuration){
+    public static void start(int timeDuration){
         timeoutDuration = timeDuration;
         TimeoutSensorTask timeoutSensorTask = new TimeoutSensorTask();
         timeoutSensorTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, timeoutDuration*60*1000);
