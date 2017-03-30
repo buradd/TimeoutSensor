@@ -23,13 +23,10 @@ public final class TimeoutSensor {
     private static Activity mCurrentActivity = null;
     public static long timeoutDuration = 1;
 
-    public static void start(){
+    public static void start(long timeDuration){
+        timeoutDuration = timeDuration;
         TimeoutSensorTask timeoutSensorTask = new TimeoutSensorTask();
         timeoutSensorTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, timeoutDuration*60*1000);
-    }
-
-    public static void setTimeoutDuration(long duration){
-        timeoutDuration = duration;
     }
 
     public static void setCurrentActivity(Activity activity){
@@ -85,7 +82,7 @@ public final class TimeoutSensor {
             while(!isCancelled()){
                 idle = System.currentTimeMillis() - lastUsed;
                 try{
-                    Thread.sleep(15000); //check every 15 seconds
+                    Thread.sleep(1000); //check every 1 seconds
                 }catch (InterruptedException e){
                     Log.d(TAG, "TimeoutSensor interrupted!");
                 }
