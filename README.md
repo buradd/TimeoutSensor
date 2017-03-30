@@ -1,6 +1,24 @@
 # TimeoutSensor
 Timeout Sensor for Android Applications
 
+Make sure to add to your gradle:
+
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+    
+    
+    	dependencies {
+	        compile 'com.github.buradd:TimeoutSensor:1.0'
+	}
+
+
+
+
+
 To use, you must be using AppCompat - and replace each Activity extention with TimeoutCompatActivity:
     
     public class MainActivity extends TimeoutCompatActivity {
