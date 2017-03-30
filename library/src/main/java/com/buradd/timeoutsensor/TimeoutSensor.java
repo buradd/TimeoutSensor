@@ -85,7 +85,7 @@ public final class TimeoutSensor {
             while(!isCancelled()){
                 idle = System.currentTimeMillis() - lastUsed;
                 try{
-                    Thread.sleep(70000); //check every 70 seconds
+                    Thread.sleep(15000); //check every 15 seconds
                 }catch (InterruptedException e){
                     Log.d(TAG, "TimeoutSensor interrupted!");
                 }
