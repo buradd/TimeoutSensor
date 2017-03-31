@@ -29,6 +29,19 @@ public final class TimeoutSensor {
         timeoutSensorTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, timeoutDuration*60*1000);
     }
 
+    public static void start(){
+        TimeoutSensorTask timeoutSensorTask = new TimeoutSensorTask();
+        timeoutSensorTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, timeoutDuration*60*1000);
+    }
+
+    public static void setTimeoutDuration(int timeDuration){
+        timeoutDuration = timeDuration;
+    }
+
+    public static long getTimeoutDuration(){
+        return timeoutDuration;
+    }
+
     public static void setCurrentActivity(Activity activity){
         mCurrentActivity = activity;
     }
@@ -117,6 +130,11 @@ public final class TimeoutSensor {
         public static synchronized void touch(){
             lastUsed = System.currentTimeMillis();
         }
+
+        public void stop(){
+            this.cancel(true);
+        }
+
     }
 
     public static class SessionExpiringDialog extends DialogFragment {
