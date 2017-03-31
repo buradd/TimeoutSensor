@@ -1,6 +1,8 @@
 # TimeoutSensor
 Timeout Sensor for Android Applications
 
+This library will make it easy to set a session timeout duration and monitor the application for inactivity.  If there has not been any user interaction for the specified amount of time, a dialog will pop up and give the user an additional 30 seconds to respond otherwise the application will kill itself.
+
 Make sure to add to your gradle:
 
 	allprojects {
