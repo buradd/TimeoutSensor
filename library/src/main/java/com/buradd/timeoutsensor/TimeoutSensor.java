@@ -22,15 +22,16 @@ public final class TimeoutSensor {
 
     private static Activity mCurrentActivity = null;
     public static long timeoutDuration = 1;
+    public static TimeoutSensorTask timeoutSensorTask;
 
     public static void start(int timeDuration){
         timeoutDuration = timeDuration;
-        TimeoutSensorTask timeoutSensorTask = new TimeoutSensorTask();
+        timeoutSensorTask = new TimeoutSensorTask();
         timeoutSensorTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, timeoutDuration*60*1000);
     }
 
     public static void start(){
-        TimeoutSensorTask timeoutSensorTask = new TimeoutSensorTask();
+        timeoutSensorTask = new TimeoutSensorTask();
         timeoutSensorTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, timeoutDuration*60*1000);
     }
 
@@ -40,6 +41,12 @@ public final class TimeoutSensor {
 
     public static long getTimeoutDuration(){
         return timeoutDuration;
+    }
+
+    public static void stop(){
+        if(timeoutSensorTask != null){
+            timeoutSensorTask.cancel(true);
+        }
     }
 
     public static void setCurrentActivity(Activity activity){
@@ -131,10 +138,6 @@ public final class TimeoutSensor {
             lastUsed = System.currentTimeMillis();
         }
 
-        public void stop(){
-            this.cancel(true);
-        }
-
     }
 
     public static class SessionExpiringDialog extends DialogFragment {
@@ -170,7 +173,7 @@ public final class TimeoutSensor {
                     .setPositiveButton("STAY SIGNED IN", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             countDownTimer.cancel();
-                            TimeoutSensorTask timeoutSensorTask = new TimeoutSensorTask();
+                            timeoutSensorTask = new TimeoutSensorTask();
                             timeoutSensorTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, timeoutDuration*60*1000);
                             dismiss();
                         }
