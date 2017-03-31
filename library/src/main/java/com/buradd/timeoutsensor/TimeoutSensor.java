@@ -53,6 +53,10 @@ public final class TimeoutSensor {
         mCurrentActivity = activity;
     }
 
+    public static Activity getCurrentActivity(){
+        return mCurrentActivity;
+    }
+    
     public static class TimeoutCompatActivity extends AppCompatActivity {
         @Override
         protected void onCreate(@Nullable Bundle savedInstanceState) {
