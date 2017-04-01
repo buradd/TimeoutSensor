@@ -25,12 +25,14 @@ public final class TimeoutSensor {
     public static TimeoutSensorTask timeoutSensorTask;
 
     public static void start(int timeDuration){
-        timeoutDuration = timeDuration;
+        stop();
+        timeoutDuration = timeDuration;        
         timeoutSensorTask = new TimeoutSensorTask();
         timeoutSensorTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, timeoutDuration*60*1000);
     }
 
     public static void start(){
+        stop();
         timeoutSensorTask = new TimeoutSensorTask();
         timeoutSensorTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, timeoutDuration*60*1000);
     }
