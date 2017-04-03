@@ -24,12 +24,14 @@ public final class TimeoutSensor {
     public static TimeoutSensorTask timeoutSensorTask;
 
     public static void start(int timeDuration){
-        timeoutDuration = timeDuration;
+        stop();
+        timeoutDuration = timeDuration;        
         timeoutSensorTask = new TimeoutSensorTask();
         timeoutSensorTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, timeoutDuration*60*1000);
     }
 
     public static void start(){
+        stop();
         timeoutSensorTask = new TimeoutSensorTask();
         timeoutSensorTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, timeoutDuration*60*1000);
     }
@@ -52,6 +54,10 @@ public final class TimeoutSensor {
         mCurrentActivity = activity;
     }
 
+    public static Activity getCurrentActivity(){
+        return mCurrentActivity;
+    }
+    
     public static class TimeoutCompatActivity extends AppCompatActivity {
         @Override
         protected void onCreate(@Nullable Bundle savedInstanceState) {
