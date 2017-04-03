@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -83,6 +82,36 @@ public final class TimeoutSensor {
         }
     }
 
+    public static class TimeoutActivity extends Activity {
+        @Override
+        protected void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setCurrentActivity(this);
+        }
+
+        @Override
+        protected void onDestroy() {
+            super.onDestroy();
+        }
+
+        @Override
+        protected void onPause() {
+            super.onPause();
+        }
+
+        @Override
+        protected void onResume() {
+            super.onResume();
+            setCurrentActivity(this);
+        }
+
+        @Override
+        public void onUserInteraction() {
+            super.onUserInteraction();
+            TimeoutSensorTask.touch();
+        }
+    }
+
     public static class TimeoutSensorTask extends AsyncTask<Long, Void, Void> {
 
         private static final String TAG = TimeoutSensorTask.class.getName();
@@ -110,9 +139,15 @@ public final class TimeoutSensor {
                     idle = 0;
                     this.cancel(true);
                     if(pm.isScreenOn()) {
-                        SessionExpiringDialog sessionExpiringDialog = new SessionExpiringDialog();
-                        sessionExpiringDialog.setCancelable(false);
-                        sessionExpiringDialog.show(((AppCompatActivity) mCurrentActivity).getSupportFragmentManager(), "tag");
+                        if(mCurrentActivity instanceof Activity){
+                            AppDialogFragment appDialogFragment = new AppDialogFragment();
+                            appDialogFragment.setCancelable(false);
+                            appDialogFragment.show(((Activity) mCurrentActivity).getFragmentManager(), "dialog");
+                        }else if(mCurrentActivity instanceof AppCompatActivity){
+                            AppCompatDialogFragment appCompatDialogFragment = new AppCompatDialogFragment();
+                            appCompatDialogFragment.setCancelable(false);
+                            appCompatDialogFragment.show(((AppCompatActivity) mCurrentActivity).getSupportFragmentManager(), "compatdialog");
+                        }
                     }else{
                         if(mCurrentActivity != null) {
                             mCurrentActivity.finishAffinity();
@@ -140,9 +175,51 @@ public final class TimeoutSensor {
 
     }
 
-    public static class SessionExpiringDialog extends DialogFragment {
+    public static class AppDialogFragment extends android.app.DialogFragment {
         CountDownTimer countDownTimer;
-        public SessionExpiringDialog() {
+        public AppDialogFragment() {
+            super();
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            final View view = inflater.inflate(R.layout.session_dialog, null);
+            final TextView sessionText = (TextView) view.findViewById(R.id.session_text);
+            countDownTimer = new CountDownTimer(31000, 1000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    long diffSeconds = millisUntilFinished / 1000 % 60;
+                    sessionText.setText("Session will expire in: " + diffSeconds + " seconds.");
+                }
+
+                @Override
+                public void onFinish() {
+                    if(mCurrentActivity != null) {
+                        mCurrentActivity.finishAffinity();
+                    }
+                    System.exit(0);
+                }
+            };
+            countDownTimer.start();
+            builder.setView(view);
+            builder.setMessage("Your session is about to expire.").setTitle("ATTENTION:")
+                    .setPositiveButton("STAY SIGNED IN", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            countDownTimer.cancel();
+                            timeoutSensorTask = new TimeoutSensorTask();
+                            timeoutSensorTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, timeoutDuration*60*1000);
+                            dismiss();
+                        }
+                    });
+            return builder.create();
+        }
+    }
+
+    public static class AppCompatDialogFragment extends android.support.v4.app.DialogFragment {
+        CountDownTimer countDownTimer;
+        public AppCompatDialogFragment() {
             super();
         }
 
