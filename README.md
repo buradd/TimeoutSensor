@@ -14,10 +14,16 @@ Make sure to add to your gradle:
     
     
     	dependencies {
-	        compile 'com.github.buradd:TimeoutSensor:1.6'
+	        compile 'com.github.buradd:TimeoutSensor:1.7'
 	}
 
-To use, you must be using AppCompat - and replace each Activity extention with TimeoutCompatActivity:
+To use, you must extend all of your activities with TimeoutActivity (or TimeoutCompatActivity if you use AppCompat):
+    
+    public class MainActivity extends TimeoutActivity {
+    
+    }
+    
+    //OR IF YOU USE APPCOMPAT,
     
     public class MainActivity extends TimeoutCompatActivity {
     
