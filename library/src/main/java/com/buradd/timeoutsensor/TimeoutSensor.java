@@ -22,6 +22,10 @@ public final class TimeoutSensor {
     private static Activity mCurrentActivity = null;
     public static long timeoutDuration = 1;
     public static TimeoutSensorTask timeoutSensorTask;
+    public static String DIALOG_TITLE = "ATTENTION:";
+    public static String DIALOG_MESSAGE = "Your session is about to expire.";
+    public static String DIALOG_BUTTON = "STAY SIGNED IN";
+    public static String DIALOG_TEXTVIEW = "Session will expire in: %s seconds.";
 
     public static void start(int timeDuration){
         stop();
@@ -56,6 +60,22 @@ public final class TimeoutSensor {
 
     public static Activity getCurrentActivity(){
         return mCurrentActivity;
+    }
+
+    public static void setDialogTitle(String title){
+        DIALOG_TITLE = title;
+    }
+
+    public static void setDialogMessage(String message){
+        DIALOG_MESSAGE = message;
+    }
+
+    public static void setDialogButton(String button){
+        DIALOG_BUTTON = button;
+    }
+
+    public static void setDialogTextview(String textview){
+        DIALOG_TEXTVIEW = textview;
     }
     
     public static class TimeoutCompatActivity extends AppCompatActivity {
@@ -197,7 +217,7 @@ public final class TimeoutSensor {
                 @Override
                 public void onTick(long millisUntilFinished) {
                     long diffSeconds = millisUntilFinished / 1000 % 60;
-                    sessionText.setText("Session will expire in: " + diffSeconds + " seconds.");
+                    sessionText.setText(String.format(DIALOG_TEXTVIEW, diffSeconds));
                 }
 
                 @Override
@@ -210,8 +230,8 @@ public final class TimeoutSensor {
             };
             countDownTimer.start();
             builder.setView(view);
-            builder.setMessage("Your session is about to expire.").setTitle("ATTENTION:")
-                    .setPositiveButton("STAY SIGNED IN", new DialogInterface.OnClickListener() {
+            builder.setMessage(DIALOG_MESSAGE).setTitle(DIALOG_TITLE)
+                    .setPositiveButton(DIALOG_BUTTON, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             countDownTimer.cancel();
                             timeoutSensorTask = new TimeoutSensorTask();
@@ -239,7 +259,7 @@ public final class TimeoutSensor {
                 @Override
                 public void onTick(long millisUntilFinished) {
                     long diffSeconds = millisUntilFinished / 1000 % 60;
-                    sessionText.setText("Session will expire in: " + diffSeconds + " seconds.");
+                    sessionText.setText(String.format(DIALOG_TEXTVIEW, diffSeconds));
                 }
 
                 @Override
@@ -252,8 +272,8 @@ public final class TimeoutSensor {
             };
             countDownTimer.start();
             builder.setView(view);
-            builder.setMessage("Your session is about to expire.").setTitle("ATTENTION:")
-                    .setPositiveButton("STAY SIGNED IN", new DialogInterface.OnClickListener() {
+            builder.setMessage(DIALOG_MESSAGE).setTitle(DIALOG_TITLE)
+                    .setPositiveButton(DIALOG_BUTTON, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             countDownTimer.cancel();
                             timeoutSensorTask = new TimeoutSensorTask();
